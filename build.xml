@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="org.eclipse.nebula.widgets.ganttchart" default="build">
+
+	<!-- Global Properties -->    
+        <property environment="env" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="build.parent.dir" value="${basedir}/../build" />
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="test.dir" value="${basedir}/src/test/java" />
+	<property name="rs.dir" value="${basedir}" />
+	<property name="rst.dir" value="${basedir}/src/test/resources" />
+	<property name="debug" value="false" />
+	<property name="version" value="1.0.0" />
+	
+	<!-- Eclipse properties -->
+	<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
+	<property name="eclipse.platform.plugins" value="${env.FP_EHMI_PLATFORM}/others/plugins/" />
+
+	<target name="clean" description="-> Cleanup all of the temporary files and directories">
+		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${bin.dir}" />
+	</target>
+
+	<target name="init"> 
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.parent.dir}" />
+	</target>
+   
+        <target name="compile" depends="init">
+                <javac srcdir="${src.dir}" destdir="${build.dir}" source="1.6" target="1.6" debug="${debug}" includeantruntime="false">
+                        <compilerarg line="-nowarn" />
+                        <classpath>
+                                <fileset dir="${build.parent.dir}" includes="**/*.jar" />
+                                <fileset dir="${eclipse.home}/plugins" includes="**/*.jar" />
+                                <fileset dir="${eclipse.platform.plugins}" includes="**/*.jar" />
+                                <pathelement path="${java.class.path}/" />
+                        </classpath>
+                </javac>
+        </target>
+
+	<target name="package" depends="compile">
+		<jar destfile="${dist.dir}/${ant.project.name}-${version}.jar" manifest="META-INF/MANIFEST.MF">
+                         <fileset dir="${build.dir}" casesensitive="yes">
+                                <include name="**" />
+                        </fileset>
+			<fileset dir="${rs.dir}" >
+				<include name="META-INF/"/>
+				<include name="icons/"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="package-source" depends="compile">
+		<jar destfile="${dist.dir}/${ant.project.name}-${version}-sources.jar" manifest="META-INF/MANIFEST.MF">
+            <fileset dir="${build.dir}" casesensitive="yes">
+                    <include name="**" />
+            </fileset>
+			 <fileset dir="${src.dir}" casesensitive="yes">
+                    <include name="**" />
+            </fileset>
+			<fileset dir="${rs.dir}" >
+				<include name="META-INF/"/>
+				<include name="icons/"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="install-plugin" depends="package" description="-> Installs the bundle in the parent build directory">
+          <copy file="${dist.dir}/${ant.project.name}-${version}.jar" todir="${build.parent.dir}"/>
+        </target>
+
+	<target name="install-plugin-source" depends="package-source" description="-> Installs the bundle in the parent build directory">
+          <copy file="${dist.dir}/${ant.project.name}-${version}-sources.jar" todir="${build.parent.dir}"/>
+        </target>
+	
+	<target name="build" depends="package" description="-> Compiles and packages the source" />
+
+</project>

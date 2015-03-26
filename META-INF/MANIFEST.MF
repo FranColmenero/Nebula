@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NebulaGanttchart
+Bundle-SymbolicName: org.eclipse.nebula.widgets.ganttchart
+Bundle-Version: 1.0.0.0
+Require-Bundle: org.eclipse.swt;bundle-version="3.6.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.nebula.widgets.ganttchart,
+ org.eclipse.nebula.widgets.ganttchart.dnd,
+ org.eclipse.nebula.widgets.ganttchart.themes,
+ org.eclipse.nebula.widgets.ganttchart.undoredo,
+ org.eclipse.nebula.widgets.ganttchart.undoredo.commands
+Bundle-Vendor: 
